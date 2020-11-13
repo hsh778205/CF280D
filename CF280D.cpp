@@ -51,16 +51,93 @@ struct node
 		r=R; 
 		sum=lmax=lmaxr=rmax=rmaxl=zmax=zmaxl=zmaxr=lmin=lminr=rmin=rminl=zmin=zminl=zminr=lazy=0;
 	}
+	void clear()
+	{
+		sum=lmax=lmaxr=rmax=rmaxl=zmax=zmaxl=zmaxr=lmin=lminr=rmin=rminl=zmin=zminl=zminr=0;
+	}
 }b[400010];
 void upd(node & x,node & y,node & z)
 {
-	
-	
 	x.l=y.l;
 	x.r=z.r;
 	x.sum=y.sum+z.sum;
 	
+	if(x.lmax>y.sum+z.lmax)//lmax
+	{
+		x.lmax=y.lmax;
+		x.lmaxr=y.lmaxr;
+	}
+	else
+	{
+		x.lmax=y.sum+z.lmax;
+		x.lmaxr=z.lmax;
+	}
 	
+	if(x.rmax>z.sum+y.rmax)//rmax
+	{
+		x.rmax=z.rmax;
+		x.rmaxl=z.rmaxl;
+	}
+	else
+	{
+		x.rmax=z.sum+y.rmax;
+		x.rmaxl=y.rmax;
+	}
+	
+	x.zmax=y.rmaxz+.lmax;//zmax
+	x.zmaxl=y.rmaxl;
+	x.zmaxr=z.lmaxr;
+	if(x.zmax<y.zmax)
+	{
+		x.zmax=y.zmax;
+		x.zmaxl=y.zmaxl;
+		x.zmaxr=y.zmaxr;
+	}
+	if(x.zmax<z.zmax)
+	{
+		x.zmax=z.zmax;
+		x.zmaxl=z.zmaxl;
+		x.zmaxr=z.zmaxr;
+	}
+	
+	
+	if(x.lmin<y.sum+z.lmin)//lmin
+	{
+		x.lmin=y.lmin;
+		x.lminr=y.lminr;
+	}
+	else
+	{
+		x.lmin=y.sum+z.lmin;
+		x.lminr=z.lmin;
+	}
+	
+	if(x.rmin<z.sum+y.rmin)//rmin
+	{
+		x.rmin=z.rmin;
+		x.rminl=z.rminl;
+	}
+	else
+	{
+		x.rmin=z.sum+y.rmin;
+		x.rminl=y.rmin;
+	}
+	
+	x.zmin=y.rmin+z.lmin;//zmax
+	x.zminl=y.rminl;
+	x.zminr=z.lminr;
+	if(x.zmin<y.zmin)
+	{
+		x.zmin=y.zmin;
+		x.zminl=y.zminl;
+		x.zminr=y.zminr;
+	}
+	if(x.zmin<z.zmin)
+	{
+		x.zmax=z.zmin;
+		x.zmaxl=z.zmaxl;
+		x.zmaxr=z.zmaxr;
+	}
 }
 
 int main()
