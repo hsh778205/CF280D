@@ -60,7 +60,7 @@ struct node
 	}
 	void clear()
 	{
-		sum=lmax=lmaxr=rmax=rmaxl=zmax=zmaxl=zmaxr=lmin=lminr=rmin=rminl=zmin=zminl=zminr=0;
+		lazy=sum=lmax=lmaxr=rmax=rmaxl=zmax=zmaxl=zmaxr=lmin=lminr=rmin=rminl=zmin=zminl=zminr=0;
 	}
 }b[400010];
 void upd(node & x,node & y,node & z)
