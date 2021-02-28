@@ -1,16 +1,52 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<algorithm>
+#include<cstdio>
+#include<cstring>
+#include<cmath>
+#include<map>
+#include<set>
+#include<queue>
+#include<vector>
+#define IL inline
 #define re register
 #define LL long long
+#define ULL unsigned long long
+#ifdef TH
 #define debug printf("Now is %d\n",__LINE__);
+#else
+#define debug
+#endif
 using namespace std;
+
+template<class T>inline void read(T&x)
+{
+	char ch=getchar();
+	int fu;
+	while(!isdigit(ch)&&ch!='-') ch=getchar();
+	if(ch=='-') fu=-1,ch=getchar();
+	x=ch-'0';ch=getchar();
+	while(isdigit(ch)){x=x*10+ch-'0';ch=getchar();}
+	x*=fu;
+}
 inline int read()
 {
-	re int x=0,f=1;
-	re char ch=getchar();
-	for(;ch>'9'||ch<'0';ch=getchar()) if(ch=='-') f*=-1;
-	for(;ch>='0'&&ch<='9';ch=getchar()) x=(x<<1)+(x<<3)+(ch^48);
-	return x*f;
+	int x=0,fu=1;
+	char ch=getchar();
+	while(!isdigit(ch)&&ch!='-') ch=getchar();
+	if(ch=='-') fu=-1,ch=getchar();
+	x=ch-'0';ch=getchar();
+	while(isdigit(ch)){x=x*10+ch-'0';ch=getchar();}
+	return x*fu;
 }
+int G[55];
+template<class T>inline void write(T x)
+{
+	int g=0;
+	if(x<0) x=-x,putchar('-');
+	do{G[++g]=x%10;x/=10;}while(x);
+	for(int i=g;i>=1;--i)putchar('0'+G[i]);putchar('\n');
+}
+
 LL a[100010];
 struct node
 {
@@ -203,13 +239,13 @@ void spread(LL p)
 }
 void change_one(LL p,LL x,LL k)
 {
-	spread(p);
 	if(l(p)==r(p))
 	{
 		a[l(p)]=k;
 		b[p]=node(l(p),r(p));
 		return;
 	}
+	spread(p);
 	LL mid=(l(p)+r(p))>>1;
 	if(x<=mid) change_one(p<<1,x,k);
 	else change_one(p<<1|1,x,k);
@@ -217,13 +253,13 @@ void change_one(LL p,LL x,LL k)
 }
 void change_fu(LL p,LL L,LL R)
 {
-	spread(p);
 	if(L<=l(p)&&r(p)<=R)
 	{
 		lazy(p)^=1;
 		spread(p);
 		return;
 	}
+	spread(p);
 	LL mid=(l(p)+r(p))>>1;
 	if(L<=mid) change_fu(p<<1,L,R);
 	if(R>mid) change_fu(p<<1|1,L,R);
@@ -231,12 +267,12 @@ void change_fu(LL p,LL L,LL R)
 }
 node ask(LL p,LL L,LL R)
 {
-	spread(p);
 //	cout<<"p="<<p<<" lp="<<l(p)<<" rp="<<r(p)<<" L="<<L<<" R="<<R<<endl;
 	if(L<=l(p)&&r(p)<=R)
 	{
 		return b[p];
 	}
+	spread(p); 
 	LL mid=(l(p)+r(p))>>1;
 	node now;
 	if(R<=mid) return ask(p<<1,L,R);
