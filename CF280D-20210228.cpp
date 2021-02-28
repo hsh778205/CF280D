@@ -43,123 +43,124 @@ struct node
 	#define zmaxr(x) b[x].zmaxr
 	#define zmin(x) b[x].zmin
 	#define zminl(x) b[x].zminl
-	#define zminr(x) b[x].zmaxr
+	#define zminr(x) b[x].zminr
 	#define sum(x) b[x].sum
 }t,b[N*4];
 LL a[N];
-#define ls (p<<1)
-#define rs (p<<1|1)
-IL void upd(int p)
+IL void merge(node& p,node ls,node rs)
 {
-	
 	//base
-	sum(p)=sum(ls)+sum(rs);
+	p.sum=ls.sum+rs.sum;
 	//lmax
-	if(lmax(ls)>sum(ls)+lmax(rs))
+	if(ls.lmax>ls.sum+rs.lmax)
 	{
-		lmax(p)=lmax(ls);
-		lmaxr(p)=lmaxr(ls);
+		p.lmax=ls.lmax;
+		p.lmax=ls.lmaxr;
 	}
 	else
 	{
-		lmax(p)=sum(ls)+lmax(rs);
-		lmaxr(p)=lmax(rs);
+		p.lmax=ls.sum+rs.lmax;
+		p.lmax=rs.sum;
 	}
 	//rmax
-	if(rmax(rs)>sum(rs)+rmax(ls))
+	if(rs.rmax>rs.sum+ls.rmax)
 	{
-		rmax(p)=rmax(rs);
-		rmaxl(p)=rmaxl(rs);
+		p.rmax=rs.rmax;
+		p.rmaxl=rs.rmaxl;
 	}
 	else
 	{
-		rmax(p)=sum(rs)+rmax(ls);
-		rmaxl(p)=rmaxl(ls);
+		p.rmax=rs.sum+ls.rmax;
+		p.rmaxl=ls.rmaxl;
 	}
 	//lmin
-	if(lmin(ls)<sum(ls)+lmax(rs))
+	if(ls.lmin<ls.sum+rs.lmin)
 	{
-		lmin(p)=lmin(ls);
-		lminr(p)=lminr(ls); 
+		p.lmin=ls.lmin;
+		p.lminr=ls.lminr;
 	}
 	else
 	{
-		lmin(p)=sum(ls)+lmin(rs);
-		lminr(p)=lminr(rs);
+		p.lmin=ls.sum+rs.lmin;
+		p.lminr=rs.lminr;
 	}
 	//rmin
-	if(rmin(rs)<sum(rs)+rmin(ls))
+	if(rs.rmin<rs.sum+ls.rmin)
 	{
-		rmin(p)=rmin(rs);
-		rminl(p)=rminl(rs);
+		p.rmin=rs.rmin;
+		p.rminl=rs.rminl;
 	}
 	else
 	{
-		rmin(p)=sum(rs)+rmin(ls);
-		rminl(p)=rminl(ls);
+		p.rmin=rs.sum+ls.rmin;
+		p.rminl=ls.rminl;
 	}
 	//zmax
-	if(zmax(ls)<zmax(rs))
+	if(ls.zmax<rs.zmax)
 	{
-		if(zmax(rs)<rmax(ls)+lmax(rs))
+		if(rs.zmax<ls.rmax+rs.lmax)
 		{
-			zmax(p)=rmax(ls)+lmax(rs);
-			zmaxl(p)=rmaxl(ls);
-			zmaxr(p)=lmaxr(rs);
+			p.zmax=ls.rmax+rs.lmax;
+			p.zmaxl=ls.rmaxl;
+			p.zmaxr=rs.lmaxr;
 		}
 		else
 		{
-			zmax(p)=zmax(rs);
-			zmaxl(p)=zmaxl(rs);
-			zmaxr(p)=zmaxr(rs);
+			p.zmax=rs.zmax;
+			p.zmaxl=rs.zmaxl;
+			p.zmaxr=rs.zmaxr;
 		}
 	}
 	else
 	{
-		if(zmax(ls)<rmax(ls)+lmax(rs))
+		if(ls.zmax<ls.rmax+rs.lmax)
 		{
-			zmax(p)=rmax(ls)+lmax(rs);
-			zmaxl(p)=rmaxl(ls);
-			zmaxr(p)=lmaxr(rs);
+			p.zmax=ls.rmax+rs.lmax;
+			p.zmaxl=ls.rmaxl;
+			p.zmaxr=rs.lmaxr;
 		}
 		else
 		{
-			zmax(p)=zmax(ls);
-			zmaxl(p)=zmaxl(ls);
-			zmaxr(p)=zmaxr(ls);
+			p.zmax=ls.zmax;
+			p.zmaxl=ls.zmaxl;
+			p.zmaxr=ls.zmaxr;
 		}
 	}
 	//zmin
-	if(zmin(ls)>zmin(rs))
+	if(ls.zmin>rs.zmin)
 	{
-		if(zmin(rs)>rmin(ls)+lmin(rs))
+		if(rs.zmin>ls.rmin+rs.lmin)
 		{
-			zmin(p)=rmin(ls)+lmin(rs);
-			zminl(p)=rminl(ls);
-			zminr(p)=lminr(rs);
+			p.zmin=ls.rmin+rs.lmin;
+			p.zminl=ls.zminl;
+			p.zminr=rs.zminr;
 		}
 		else
 		{
-			zmin(p)=zmin(rs);
-			zmaxl(p)=zminl(rs);
-			zmaxr(p)=zmaxr(rs);
+			p.zmin=rs.zmin;
+			p.zminl=rs.zminl;
+			p.zminr=rs.zminr;
 		}
 	}
 	else
 	{
-		if(zmin(ls)>rmin(ls)+lmin(rs))
+		if(ls.zmin>ls.rmin+rs.lmin)
 		{
-			zmin(p)=rmin(ls)+lmin(rs);
-			zminl(p)=rminl(ls);
-			zminr(p)=lminr(rs);
+			p.zmin=ls.rmin+rs.lmin;
+			p.zminl=ls.zminl;
+			p.zminr=rs.zminr;
 		}
 		else
 		{
-			zmin(p)=zmin(ls);
-			zminl(p)=zminl(ls);
-			zminr(p)=zminr(ls);
+			p.zmin=ls.zmin;
+			p.zminl=ls.zminl;
+			p.zminr=ls.zminr;
 		}
 	}
+}
+void upd(int p)
+{
+	merge(b[p],b[p<<1],b[p<<1|1]);
 }
 void work(int p)
 {
@@ -215,13 +216,20 @@ void change_fu(int p,int l,int r)
 	if(r>mid) change_fu(p<<1|1,l,r);
 	upd(p);
 }
-node merge(node ls,node rs)
-{
-	
-}
+
 node ask(int p,int l,int r)
 {
-	
+	if(l<=l(p)&&r(p)<=r)
+	{
+		return b[p];
+	}
+	spread(p);
+	int mid=l(p)+r(p)>>1;
+	node ans,ls,rs;
+	if(l<=mid) ls=ask(p<<1,l,r);
+	if(r>mid) rs=ask(p<<1|1,l,r);
+	merge(ans,ls,rs);
+	return ans;
 }
 vector<pair<LL,LL>>vec;
 LL ans;
