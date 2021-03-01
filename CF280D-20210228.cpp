@@ -45,6 +45,22 @@ struct node
 	#define zminl(x) b[x].zminl
 	#define zminr(x) b[x].zminr
 	#define sum(x) b[x].sum
+	node()
+	{
+		l=r=sum=0;
+		lazy=0;
+		lmax=lmaxr=rmax=rmaxl=0;
+		lmin=lminr=rmin=rminl=0;
+		zmax=zmaxl=zmaxr=zmin=zminl=zminr=0;
+	}
+	void out()
+	{
+		cout<<"l="<<l<<" r="<<r<<" sum="<<sum<<endl;
+		cout<<"lmax="<<lmax<<" lmaxr="<<lmaxr<<" rmax="<<rmax<<" rmaxl="<<rmaxl<<endl;
+		cout<<"zmax="<<zmax<<" zmaxl="<<zmaxl<<" zmaxr="<<zmaxr<<endl;
+		
+		cout<<endl;
+	}
 }t,b[N*4];
 LL a[N];
 IL void merge(node& p,node ls,node rs)
@@ -55,12 +71,12 @@ IL void merge(node& p,node ls,node rs)
 	if(ls.lmax>ls.sum+rs.lmax)
 	{
 		p.lmax=ls.lmax;
-		p.lmax=ls.lmaxr;
+		p.lmaxr=ls.lmaxr;
 	}
 	else
 	{
 		p.lmax=ls.sum+rs.lmax;
-		p.lmax=rs.sum;
+		p.lmaxr=rs.lmaxr;
 	}
 	//rmax
 	if(rs.rmax>rs.sum+ls.rmax)
@@ -162,6 +178,25 @@ void upd(int p)
 {
 	merge(b[p],b[p<<1],b[p<<1|1]);
 }
+void work(int p,int k)
+{
+	sum(p)=zmax(p)=zmin(p)=lmax(p)=lmin(p)=rmax(p)=rmin(p)=k;
+	lmaxr(p)=lminr(p)=rmaxl(p)=rminl(p)=zmaxl(p)=zmaxr(p)=zminl(p)=zminr(p)=l(p);
+}
+void build(int p,int l,int r)
+{
+	l(p)=l;
+	r(p)=r;
+	if(l==r)
+	{
+		work(p,a[l]);
+		return;
+	}
+	int mid=l+r>>1;
+	build(p<<1,l,mid);
+	build(p<<1|1,mid+1,r);
+	upd(p);
+}
 void work(int p)
 {
 	lazy(p)^=1;
@@ -183,12 +218,9 @@ void spread(int p)
 		lazy(p<<1|1)^=1;
 		work(p<<1);
 		work(p<<1|1);
+		
+		lazy(p)=0;
 	}
-}
-void work(int p,int k)
-{
-	sum(p)=zmax(p)=zmin(p)=lmax(p)=lmin(p)=rmax(p)=rmin(p)=k;
-	lmaxr(p)=lminr(p)=rmaxl(p)=rminl(p)=zmaxl(p)=zmaxr(p)=zminl(p)=zminr(p)=l(p);
 }
 void change(int p,int x,int k)
 {
@@ -225,10 +257,10 @@ node ask(int p,int l,int r)
 	}
 	spread(p);
 	int mid=l(p)+r(p)>>1;
-	node ans,ls,rs;
-	if(l<=mid) ls=ask(p<<1,l,r);
-	if(r>mid) rs=ask(p<<1|1,l,r);
-	merge(ans,ls,rs);
+	node ans;
+	if(r<=mid) return ask(p<<1,l,r);
+	if(l<mid) return ask(p<<1|1,l,r);
+	merge(ans,ask(p<<1,l,r),ask(p<<1|1,l,r));
 	return ans;
 }
 vector<pair<LL,LL>>vec;
@@ -240,6 +272,7 @@ int main()
 	{
 		cin>>a[i];
 	}
+	build(1,1,n);
 	cin>>m;
 	for(int i=1,op,x,y,k;i<=m;i++)
 	{
@@ -266,7 +299,12 @@ int main()
 				change_fu(1,vec.back().first,vec.back().second);
 				vec.pop_back();
 			}
+			cout<<ans<<endl;
 			
+		}
+		for(int p=1;p<=n*4;p++)
+		{
+//			b[p].out();
 		}
 	}
 	return 0;
